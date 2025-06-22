@@ -1,7 +1,21 @@
 import React from 'react'
 import OrderSummary from './OrderSummary'
+import { useDispatch } from 'react-redux';
+import { removeFromCart, updateQuantity } from '../../redux/features/cart/cartSlice';
 
 const CartModal = ({ products, isOpen, onClose }) => {
+    const dispatch = useDispatch();
+
+    const handleQuantity = (type, id) => {
+        const payload = { type, id };
+        dispatch(updateQuantity(payload));
+    };
+
+    const handleRemoveFromCart = (e, id) => {
+        e.preventDefault();
+        dispatch(removeFromCart({ id }));
+    }
+
     return (
         <div
             className={`fixed z-[1000] inset-0 bg-black bg-opacity-80 transition-opacity ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -52,17 +66,20 @@ const CartModal = ({ products, isOpen, onClose }) => {
                                     </div>
 
                                     <div className='flex items-center gap-2 justify-between sm:justify-start'>
-                                        <button className='w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white'>
+                                        <button className='w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white'
+                                            onClick={() => handleQuantity('decrement', product.id)}>
                                             -
                                         </button>
                                         <span className='w-6 text-center'>{product.quantity}</span>
-                                        <button className='w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white'>
+                                        <button className='w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white'
+                                            onClick={() => handleQuantity('increment', product.id)}>
                                             +
                                         </button>
                                     </div>
 
                                     <div className='text-right sm:text-left'>
-                                        <button className='text-red-500 hover:text-red-800'>
+                                        <button className='text-red-500 hover:text-red-800'
+                                            onClick={(e) => handleRemoveFromCart(e, product.id)}>
                                             <i className="ri-delete-bin-5-line text-lg"></i>
                                         </button>
                                     </div>
