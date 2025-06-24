@@ -63,23 +63,26 @@ router.get('/all', async (req, res) => {
 // Get a single product by ID
 router.get('/:id', async (req, res) => {
     try {
-        const productId = req.params.id;
+        const { id: productId } = req.params;
+
         const product = await Products.findById(productId)
             .populate('author', 'email username');
+
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
+
         const reviews = await Reviews.find({ product: productId })
             .populate('userId', 'username email')
             .sort({ createdAt: -1 });
+
         res.status(200).json({ product, reviews });
-    }
-    catch (error) {
-        console.error("Error fetching product by ID", error);
+    } catch (error) {
+        console.error('Error fetching product by ID', error);
         res.status(500).json({ message: 'Error fetching product' });
     }
-
 });
+
 
 // Update a product by ID
 router.patch('/update/:id', verifyToken, verifyAdmin, async (req, res) => {

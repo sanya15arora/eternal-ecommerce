@@ -25,7 +25,7 @@ const productApi = createApi({
         }),
         getProductById: builder.query({
             query: (id) => `/${id}`,
-            providesTags: (result, error, id) => { { type: "Product", id } }
+            providesTags: (result, error, id) => [{ type: "Product", id }]
         }),
         createProduct: builder.mutation({
             query: (newProduct) => ({

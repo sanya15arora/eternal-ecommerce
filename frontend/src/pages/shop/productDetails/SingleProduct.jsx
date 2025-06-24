@@ -1,9 +1,25 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import RatingStars from '../../../components/RatingStars'
+import { useDispatch } from "react-redux"
+import { useGetProductByIdQuery } from '../../../redux/features/product/productApi'
+import { addToCart } from '../../../redux/features/cart/cartSlice'
 
 const SingleProduct = () => {
     const { id } = useParams()
+    const dispatch = useDispatch();
+    console.log(id)
+
+    const { data, error, isLoading } = useGetProductByIdQuery(id)
+    const singleProduct = data?.product || {};
+    const productReviews = data?.reviews || [];
+
+    const handleAddToCart = (product) => {
+        dispatch(addToCart(product))
+    }
+
+    if (isLoading) return <p>Loading....</p>
+    if (error) return <p>Error loading product details....</p>
 
     return (
         <>
@@ -14,7 +30,7 @@ const SingleProduct = () => {
                     <i className="ri-arrow-right-s-line"></i>
                     <span className='hover:text-primary'> <Link to='/shop' > Shop </Link></span>
                     <i className="ri-arrow-right-s-line"></i>
-                    <span className='hover:text-primary'> <Link to='/shop' > Shop </Link></span>
+                    <span className='hover:text-primary'> <Link to='/shop' >  {singleProduct?.name} </Link></span>
                 </div>
             </section>
 
@@ -23,24 +39,28 @@ const SingleProduct = () => {
                     <div className='md:w-1/2 w-full'>
                         <img
                             className='rounded-md w-full h-auto'
-                            src="https://images.unsplash.com/photo-1631214500115-598fc2cb8d2d?q=80&w=1925&auto=format&
-                        fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            src={singleProduct?.image}
                             alt='product' />
                     </div>
 
                     <div className='md:w-1/2 w-full'>
-                        <h3 className='text-2xl font-semibold mb-4'> Product Name</h3>
-                        <p className='text-xl text-primary mb-4'>$100 <s>$130</s></p>
-                        <p className='text-gray-400 mb-4'>This is a product description</p>
-                        <div>
-                            <p> <strong>Category:</strong> Category Name</p>
-                            <p> <strong>Color:</strong> Color Name</p>
+                        <h3 className='text-2xl font-semibold mb-4'> {singleProduct?.name}</h3>
+                        <p className='text-xl text-primary mb-4 space-x-1'>${singleProduct?.price}
+                            {singleProduct?.oldPrice && <s className='ml-1'>${singleProduct?.oldPrice}</s>}</p>
+                        <p className='text-gray-400 mb-4'>{singleProduct?.description}</p>
+                        <div className='flex flex-col space-y-2'>
+                            <p> <strong className=''>Category: </strong> {singleProduct?.category}</p>
+                            <p> <strong>Color: </strong> {singleProduct?.color}</p>
                             <div className='flex items-center gap-1'>
                                 <strong>Rating:</strong>
                                 <RatingStars rating={4} />
                             </div>
                         </div>
-                        <button className='bg-primary mt-6 px-6 py-3 text-white rounded-md'>Add to Cart</button>
+                        <button className='bg-primary mt-6 px-6 py-3 text-white rounded-md'
+                        onClick={(e)=>{
+                            e.stopPropagation();
+                            handleAddToCart(singleProduct);
+                        }}>Add to Cart</button>
                     </div>
                 </div>
             </section>

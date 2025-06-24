@@ -6,14 +6,14 @@ import { removeFromCart, updateQuantity } from '../../redux/features/cart/cartSl
 const CartModal = ({ products, isOpen, onClose }) => {
     const dispatch = useDispatch();
 
-    const handleQuantity = (type, id) => {
-        const payload = { type, id };
+    const handleQuantity = (type, _id) => {
+        const payload = { type, _id };
         dispatch(updateQuantity(payload));
     };
 
-    const handleRemoveFromCart = (e, id) => {
+    const handleRemoveFromCart = (e, _id) => {
         e.preventDefault();
-        dispatch(removeFromCart({ id }));
+        dispatch(removeFromCart({ _id }));
     }
 
     return (
@@ -67,19 +67,19 @@ const CartModal = ({ products, isOpen, onClose }) => {
 
                                     <div className='flex items-center gap-2 justify-between sm:justify-start'>
                                         <button className='w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white'
-                                            onClick={() => handleQuantity('decrement', product.id)}>
+                                            onClick={() => handleQuantity('decrement', product._id)}>
                                             -
                                         </button>
                                         <span className='w-6 text-center'>{product.quantity}</span>
                                         <button className='w-7 h-7 flex items-center justify-center rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white'
-                                            onClick={() => handleQuantity('increment', product.id)}>
+                                            onClick={() => handleQuantity('increment', product._id)}>
                                             +
                                         </button>
                                     </div>
 
                                     <div className='text-right sm:text-left'>
                                         <button className='text-red-500 hover:text-red-800'
-                                            onClick={(e) => handleRemoveFromCart(e, product.id)}>
+                                            onClick={(e) => handleRemoveFromCart(e, product._id)}>
                                             <i className="ri-delete-bin-5-line text-lg"></i>
                                         </button>
                                     </div>
