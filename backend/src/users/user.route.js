@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('./user.model');
 const generateAuthToken = require('../middleware/generateAuthToken');
-const verifyToken = require('../middleware/verifyToken');
+// const verifyToken = require('../middleware/verifyToken');
 
 // Registration Endpoint
 router.post('/register', async (req, res) => {

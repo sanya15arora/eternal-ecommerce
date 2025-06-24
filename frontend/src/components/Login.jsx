@@ -1,37 +1,40 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
+import { useLoginUserMutation } from '../redux/auth/authApi';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/auth/authSlice';
 
 const Login = () => {
     const [message, setMessage] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const handleLogin = async (e) => {
         e.preventDefault();
-
         const data = { email, password };
-        console.log(data);
-        // setMessage("");
-        // try {
-        //     const response = await fetch("http://localhost:5000/api/v1/auth/login", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json"
-        //         },
-        //         body: JSON.stringify({ email, password })
-        //     });
 
-        //     const data = await response.json();
-
-        //     if (response.ok) {
-        //         localStorage.setItem("token", data.token);
-        //         window.location.href = "/";
-        //     } else {
-        //         setMessage(data.message || "Login failed. Please try again.");
-        //     }
-        // } catch (error) {
-        //     setMessage("An error occurred. Please try again later.");
-        // }
-    };
+        try {
+            const response = await loginUser(data).unwrap();
+            if (response) {
+                const {token, user}= response;
+                dispatch(setUser({ user }));
+                setMessage("");
+                navigate("/");
+            }
+            else {
+                setMessage("Login failed. Please try again.");
+                return;
+            }
+        } catch (error) {
+            setMessage("Please provide valid email and password.");
+        }
+    }
+        ;
     return (
         <section className='h-screen flex items-center justify-center'>
             <div className='max-w-sm border shadow  bg-white max-auto p-8 rounded-lg'>
@@ -43,10 +46,11 @@ const Login = () => {
                     <input type="password" name='password' id="password" placeholder='Password' required
                         onChange={(e) => setPassword(e.target.value)}
                         className='w-full bg-gray-100 focus:outline-none px-5 py-3' />
-                    {message && <p className='text-red-500 text-center'>{message}</p>}
+                    {message && <p className='text-sm text-red-500'>{message}</p>}
                     <button type='submit'
-                        className='w-full mt-5 bg-primary text-white py-3 rounded-md hover:bg-red-300  font-medium transition duration-300'>
-                        Login
+                        className='w-full mt-5 bg-primary text-white py-3 rounded-md hover:bg-red-300  font-medium transition duration-300'
+                        disabled={loginLoading}>
+                        {loginLoading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
                 <p className='my-5 italic text-center text-sm '>Don't have an account?

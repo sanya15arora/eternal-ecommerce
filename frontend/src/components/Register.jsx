@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import { useRegisterUserMutation } from '../redux/auth/authApi';
 
 const Register = () => {
     const [message, setMessage] = useState("");
@@ -7,11 +8,30 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const [registerUser, { isloading: registerLoading }] = useRegisterUserMutation();
+    const navigate = useNavigate();
+
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        const data = {username, email, password };
-        console.log(data);
+        const data = { username, email, password };
+        try {
+            const response = await registerUser(data).unwrap();
+            if (response) {
+                setMessage("Registration successful! Please login.");
+                setUsername("");
+                setEmail("");
+                setPassword("");
+                navigate("/login");
+            }
+            else {
+                setMessage("Registration failed. Please try again.");
+            }
+        }
+        catch (error) {
+            console.error("Registration failed:", error);
+            setMessage(error.data?.message || "Registration failed. Please try again.");
+        }
     }
 
     return (
@@ -30,8 +50,9 @@ const Register = () => {
                         className='w-full bg-gray-100 focus:outline-none px-5 py-3' />
                     {message && <p className='text-red-500 text-center'>{message}</p>}
                     <button type='submit'
-                        className='w-full mt-5 bg-primary text-white py-3 rounded-md hover:bg-red-300  font-medium transition duration-300'>
-                        Register
+                        className='w-full mt-5 bg-primary text-white py-3 rounded-md hover:bg-red-300  font-medium transition duration-300'
+                        disabled={registerLoading}>
+                        {registerLoading ? 'Registering...' : 'Register'}
                     </button>
                 </form>
                 <p className='my-5 italic text-center text-sm '>Already have an account? Please
