@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import getBaseURL from '../../utils/baseURL';
+import getBaseURL from '../../../utils/baseURL';
 
 
 export const authApi = createApi({
@@ -71,6 +71,6 @@ export const authApi = createApi({
 });
 
 
-export const { useRegisterUserMutation, useLoginUserMutation, useLogoutUserMutation, useGetUserQuery, 
+export const { useRegisterUserMutation, useLoginUserMutation, useLogoutUserMutation, useGetUserQuery,
     useDeleteUserMutation, useUpdateUserRoleMutation, useEditprofileMutation } = authApi;
 export default authApi;       

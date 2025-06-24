@@ -5,9 +5,9 @@ import { useSelector } from 'react-redux'
 import CartModal from '../pages/shop/CartModal'
 import { useDispatch } from 'react-redux'
 import avatarImg from '../assets/avatar.png'
-import { useLogoutUserMutation } from '../redux/auth/authApi'
+import { useLogoutUserMutation } from '../redux/features/auth/authApi'
 import { useNavigate } from 'react-router-dom'
-import { logout } from '../redux/auth/authSlice'
+import { logout } from '../redux/features/auth/authSlice'
 
 const Navbar = () => {
 

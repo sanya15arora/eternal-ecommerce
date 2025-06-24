@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import { useLoginUserMutation } from '../redux/auth/authApi';
+import { useLoginUserMutation } from '../redux/features/auth/authApi';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../redux/auth/authSlice';
+import { setUser } from '../redux/features/auth/authSlice';
 
 const Login = () => {
     const [message, setMessage] = useState("");
@@ -21,7 +21,7 @@ const Login = () => {
         try {
             const response = await loginUser(data).unwrap();
             if (response) {
-                const {token, user}= response;
+                const { token, user } = response;
                 dispatch(setUser({ user }));
                 setMessage("");
                 navigate("/");

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
-import { useRegisterUserMutation } from '../redux/auth/authApi';
+import { useRegisterUserMutation } from '../redux/features/auth/authApi';
 
 const Register = () => {
     const [message, setMessage] = useState("");

@@ -37,10 +37,10 @@ router.get('/all', async (req, res) => {
             filter.color = color;
         }
         if (minPrice && maxPrice) {
-            const minPrice = parseFloat(minPrice);
-            const maxPrice = parseFloat(maxPrice);
-            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-                filter.price = { $gte: minPrice, $lte: maxPrice };
+            const min = parseFloat(minPrice);
+            const max = parseFloat(maxPrice);
+            if (!isNaN(min) && !isNaN(max)) {
+                filter.price = { $gte: min, $lte: max };
             }
         }
 
