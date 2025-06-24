@@ -80,12 +80,12 @@ const ShopPage = () => {
             setFiltersState={setFiltersState}
             clearFilters={clearFilters} />
           <div>
-            <h3 className='text-xl font-medium mb-4'> Showing Products {startProduct} to {endProduct} of {totalProducts} products</h3>
+             <h3 className='text-xl font-medium mb-4'> {totalProducts > 0 ? `Showing Products ${startProduct} to ${endProduct} of ${totalProducts} products` : "No such products available. Try with other filters." }</h3>
+          
             <ProductCards products={products} />
-            <div className='mt-6 flex justify-center '>
+            {totalProducts > 0 && <div className='mt-6 flex justify-center '>
               <button
-                className={`px-4 py-2 rounded-md mr-2 
-    ${currentPage === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+                className={`px-4 py-2 rounded-md mr-2 ${currentPage === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
                 disabled={currentPage === 1}
                 onClick={() => handlePageChange(currentPage - 1)}
               >
@@ -104,16 +104,15 @@ const ShopPage = () => {
                 </button>
               ))}
               <button
-                className={`px-4 py-2 rounded-md ml-2 
-    ${currentPage === totalPages
-                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+                className={`px-4 py-2 rounded-md ml-2 ${currentPage === totalPages
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
                 disabled={currentPage === totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}
               >
                 Next
               </button>
-            </div>
+            </div>}
           </div>
         </div>
       </section>
