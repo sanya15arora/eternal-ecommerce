@@ -4,6 +4,7 @@ import RatingStars from '../../../components/RatingStars'
 import { useDispatch } from "react-redux"
 import { useGetProductByIdQuery } from '../../../redux/features/product/productApi'
 import { addToCart } from '../../../redux/features/cart/cartSlice'
+import ReviewCard from '../reviews/ReviewCard'
 
 const SingleProduct = () => {
     const { id } = useParams()
@@ -57,16 +58,16 @@ const SingleProduct = () => {
                             </div>
                         </div>
                         <button className='bg-primary mt-6 px-6 py-3 text-white rounded-md'
-                        onClick={(e)=>{
-                            e.stopPropagation();
-                            handleAddToCart(singleProduct);
-                        }}>Add to Cart</button>
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleAddToCart(singleProduct);
+                            }}>Add to Cart</button>
                     </div>
                 </div>
             </section>
 
             <section className='section__container mt-8'>
-                Reviews Here.
+                <ReviewCard productReviews={productReviews} />
             </section>
 
         </>

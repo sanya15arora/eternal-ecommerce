@@ -30,8 +30,8 @@ const OrderSummary = () => {
                         <span className='mr-2'> Clear Cart</span>
                         <i className="ri-delete-bin-5-line"></i>
                     </button>
-                    <button className='bg-green-600 text-white px-3 py-1.5 mt-2 mb-4 
-                    rounded-md flex justify-between items-center hover:bg-primary-dark'>
+                    <button className='bg-green-500 text-white px-3 py-1.5 mt-2 mb-4 
+                    rounded-md flex justify-between items-center hover:bg-green-700'>
                         <span className='mr-2'>Proceed to Checkout</span>
                         <i className="ri-arrow-right-s-line"></i>
                     </button>

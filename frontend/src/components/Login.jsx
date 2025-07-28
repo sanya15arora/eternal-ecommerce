@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
 import { useLoginUserMutation } from '../redux/features/auth/authApi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/features/auth/authSlice';
 
@@ -13,6 +13,8 @@ const Login = () => {
     const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
+
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -24,7 +26,8 @@ const Login = () => {
                 const { token, user } = response;
                 dispatch(setUser({ user }));
                 setMessage("");
-                navigate("/");
+                const redirectPath = location.state?.from || "/";
+                navigate(redirectPath);
             }
             else {
                 setMessage("Login failed. Please try again.");

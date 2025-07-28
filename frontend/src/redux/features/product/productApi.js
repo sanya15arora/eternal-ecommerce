@@ -39,6 +39,9 @@ const productApi = createApi({
         getRelatedProducts: builder.query({
             query: (id) => `/related/${id}`,
         }),
+        getTrendingProducts: builder.query({
+            query: () => '/trending',
+        }),
         updateProduct: builder.mutation({
             query: ({ id, ...updatedProduct }) => ({
                 url: `/update/${id}`,
@@ -65,6 +68,7 @@ export const {
     useGetProductByIdQuery,
     useCreateProductMutation,
     useGetRelatedProductsQuery,
+    useGetTrendingProductsQuery,
     useUpdateProductMutation,
     useDeleteProductMutation,
 } = productApi;
