@@ -60,6 +60,19 @@ router.get('/all', async (req, res) => {
     }
 });
 
+// Get Trending products 
+router.get('/trending', async (req, res) => {
+    try {
+        const trendingProducts = await Products.find()
+            .sort({ rating: -1 })
+            .limit(10);
+        res.status(200).send(trendingProducts);
+    } catch (error) {
+        console.error('Trending API Error:', error);
+        res.status(500).send({ message: 'Server error while fetching trending products.' });
+    }
+});
+
 // Get a single product by ID
 router.get('/:id', async (req, res) => {
     try {
@@ -72,7 +85,7 @@ router.get('/:id', async (req, res) => {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-        const reviews = await Reviews.find({ product: productId })
+        const reviews = await Reviews.find({ productId: productId })
             .populate('userId', 'username email')
             .sort({ createdAt: -1 });
 
@@ -155,6 +168,7 @@ router.get('/related/:id', async (req, res) => {
         res.status(500).json({ message: 'Error fetching the related products' });
     }
 });
+
 
 
 module.exports = router;
