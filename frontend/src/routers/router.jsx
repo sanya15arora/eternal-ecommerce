@@ -11,6 +11,8 @@ import PaymentSuccess from "../components/PaymentSuccess";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import PrivateRoute from "./PrivateRoute";
 import UserDMain from "../pages/dashboard/user/dashboard/UserDMain";
+import UserOrders from "../pages/dashboard/user/dashboard/UserOrders";
+import OrderDetails from "../pages/dashboard/user/OrderDetails";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +25,7 @@ const router = createBrowserRouter([
             { path: '/shop', element: <ShopPage /> },
             { path: '/shop/:id', element: <SingleProduct /> },
             { path: '/success', element: <PaymentSuccess /> },
+            { path: '/order/:orderId', element: <OrderDetails /> },
 
         ],
     },
@@ -43,8 +46,7 @@ const router = createBrowserRouter([
         children: [
             //User Routes
             { path: '', element: <UserDMain /> },
-            { path: 'orders', element: <div>User Order</div> },
-            { path: 'payments', element: <div>User Payments</div> },
+            { path: 'orders', element: <UserOrders /> },
             { path: 'profile', element: <div>User Profile</div> },
             { path: 'reviews', element: <div>User Reviews</div> },
 

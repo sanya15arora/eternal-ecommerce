@@ -25,6 +25,7 @@ const OrderSummary = () => {
             products,
             userId: user?._id,
             email: user?.email,
+            taxRate
         }
         const headers = {
             'Content-Type': 'application/json'
