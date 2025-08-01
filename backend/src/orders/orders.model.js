@@ -14,6 +14,7 @@ const OrderSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  taxRate: { type: Number, default: 0 },
   email: { type: String, required: true, trim: true },
   status: {
     type: String,

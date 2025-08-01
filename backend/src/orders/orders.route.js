@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const Orders = require('./orders.model');
+const Product = require('../products/products.model');
 const verifyToken = require('../middleware/verifyToken');
 const verifyAdmin = require('../middleware/verifyAdmin');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Create Checkout Session
 router.post('/create-checkout-session', async (req, res) => {
-    const { products, userId, email } = req.body;
+    const { products, userId, email, taxRate } = req.body;
 
     try {
         const lineItems = products.map(product => ({
@@ -16,8 +17,11 @@ router.post('/create-checkout-session', async (req, res) => {
                 product_data: {
                     name: product.name,
                     images: [product.image],
+                    metadata: {
+                        productId: product._id,
+                    },
                 },
-                unit_amount: Math.round(product.price * 100),
+                unit_amount: Math.round((product.price + (product.price * taxRate)) * 100),
             },
             quantity: product.quantity,
         }));
@@ -29,7 +33,11 @@ router.post('/create-checkout-session', async (req, res) => {
             client_reference_id: userId,
             customer_email: email,
             payment_intent_data: {
-                metadata: { userId, email },
+                metadata: {
+                    userId,
+                    email,
+                    taxRate: taxRate?.toString() || '0'
+                },
             },
             success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.CLIENT_URL}/cancel`,
@@ -57,7 +65,8 @@ router.post('/confirm-payment', async (req, res) => {
         let order = await Orders.findOne({ orderId });
 
         const products = session.line_items.data.map(item => ({
-            productId: item.price.product?.id || 'unknown',
+            productId: item.price.product?.metadata?.productId || 'unknown',
+
             quantity: item.quantity,
         }));
 
@@ -68,6 +77,7 @@ router.post('/confirm-payment', async (req, res) => {
             userId: session.client_reference_id || paymentIntent.metadata?.userId,
             email: session.customer_email || paymentIntent.metadata?.email,
             status: paymentIntent.status === 'succeeded' ? 'pending' : 'failed',
+            taxRate: parseFloat(paymentIntent.metadata?.taxRate || '0'),
         };
 
         if (!order) {
@@ -109,20 +119,40 @@ router.get('/email/:email', async (req, res) => {
 router.get('/id/:id', async (req, res) => {
     const { id } = req.params;
 
-
     if (!id) {
-        return res.status(400).json({ error: 'Order id is required' });
+        return res.status(400).json({ error: 'Order ID is required.' });
     }
 
     try {
+        // Find order by ID
         const order = await Orders.findById(id);
         if (!order) {
-            return res.status(404).json({ message: 'No order found for this id' });
+            return res.status(404).json({ message: 'No order found with this ID.' });
         }
-        res.status(200).send({ order });
+
+        const detailedProducts = await Promise.all(
+            order.products.map(async (item) => {
+                const product = await Product.findById(item.productId).select('name price image');
+                return {
+                    quantity: item.quantity,
+                    _id: item._id,
+                    productId: item.productId,
+                    name: product?.name || 'Unknown Product',
+                    price: product?.price || 0,
+                    image: product?.image || '',
+                };
+            })
+        );
+
+        const enrichedOrder = {
+            ...order.toObject(),
+            products: detailedProducts
+        };
+
+        return res.status(200).json({ order: enrichedOrder });
     } catch (error) {
-        console.error('Error fetching order by id:', error.message);
-        res.status(500).json({ message: 'Error fetching order by id' });
+        console.error('Error fetching order by ID:', error.message);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 });
 
