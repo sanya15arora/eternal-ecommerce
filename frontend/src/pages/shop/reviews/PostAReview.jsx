@@ -32,7 +32,7 @@ const PostAReview = ({ isOpen, handleClose }) => {
         };
 
         try {
-            const response = await (await postReview(reviewData)).unwrap();
+            const response = await postReview(reviewData).unwrap();
             alert('Review posted successfully !!');
             setRating(0);
             setComment('');

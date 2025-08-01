@@ -9,7 +9,6 @@ const navItems = [
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'Orders', path: '/dashboard/orders' },
     { label: 'Profile', path: '/dashboard/profile' },
-    { label: 'Reviews', path: '/dashboard/reviews' }
 ];
 
 

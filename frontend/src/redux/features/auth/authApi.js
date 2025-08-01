@@ -53,8 +53,8 @@ export const authApi = createApi({
         }),
         editprofile: builder.mutation({
             query: ({ id, userData }) => ({
-                url: `/${id}`,
-                method: 'PUT',
+                url: `/edit/${id}`,
+                method: 'PATCH',
                 body: userData,
             }),
         }),

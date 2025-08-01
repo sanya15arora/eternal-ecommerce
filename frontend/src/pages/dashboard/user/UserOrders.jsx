@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { useGetOrdersByEmailQuery } from '../../../../redux/features/order/orderApi';
+import { useGetOrdersByEmailQuery } from '../../../redux/features/order/orderApi';
 import { Link } from 'react-router-dom';
 
 const UserOrders = () => {
