@@ -48,6 +48,8 @@ router.post('/login', async (req, res) => {
                 bio: user.bio,
                 profileImage: user.profileImage,
                 profession: user.profession,
+                phone: user.phone,
+                address: user.address,
             }
         });
     } catch (err) {
@@ -119,6 +121,7 @@ router.put('/:id/role', async (req, res) => {
                 bio: user.bio,
                 profileImage: user.profileImage,
                 profession: user.profession,
+                phone: user.phone,
             },
         });
     } catch (err) {
@@ -129,33 +132,49 @@ router.put('/:id/role', async (req, res) => {
 
 
 // Update User Profile Endpoint
-router.patch('/:id', async (req, res) => {
+router.patch('/edit/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { username, profileImage, bio, profession } = req.body;
 
-        const user = await User.findById(id);
-        if (!user) {
+        const {
+            username,
+            profileImage,
+            bio,
+            profession,
+            phone,
+            address,
+        } = req.body;
+
+        const updateFields = {};
+
+        if (username !== undefined) updateFields.username = username;
+        if (profileImage !== undefined) updateFields.profileImage = profileImage;
+        if (bio !== undefined) updateFields.bio = bio;
+        if (profession !== undefined) updateFields.profession = profession;
+        if (phone !== undefined) updateFields.phone = phone;
+        if (address !== undefined) updateFields.address = address;
+
+        const updatedUser = await User.findByIdAndUpdate(id, updateFields, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!updatedUser) {
             return res.status(404).json({ message: 'User not found' });
         }
-
-        if (username !== undefined) user.username = username;
-        if (profileImage !== undefined) user.profileImage = profileImage;
-        if (bio !== undefined) user.bio = bio;
-        if (profession !== undefined) user.profession = profession;
-
-        await user.save();
 
         res.status(200).json({
             message: 'Profile updated successfully',
             user: {
-                _id: user._id,
-                username: user.username,
-                email: user.email,
-                role: user.role,
-                bio: user.bio,
-                profileImage: user.profileImage,
-                profession: user.profession,
+                _id: updatedUser._id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                role: updatedUser.role,
+                bio: updatedUser.bio,
+                profileImage: updatedUser.profileImage,
+                profession: updatedUser.profession,
+                phone: updatedUser.phone,
+                address: updatedUser.address,
             },
         });
     } catch (error) {
@@ -163,6 +182,9 @@ router.patch('/:id', async (req, res) => {
         res.status(500).json({ message: 'Error updating user profile' });
     }
 });
+
+module.exports = router;
+
 
 
 module.exports = router;

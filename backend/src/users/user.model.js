@@ -9,6 +9,8 @@ const userSchema = new Schema({
     profileImage: String,
     bio: { type: String, maxLength: 200 },
     profession: String,
+    phone: String,
+    address: String,
     createdAt: { type: Date, default: Date.now },
 })
 
