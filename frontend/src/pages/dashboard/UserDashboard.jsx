@@ -39,7 +39,7 @@ const UserDashboard = () => {
                 <ul className='space-y-5 pt-5'>
                     {navItems.map((item) => (<li key={item.path}>
                         <NavLink
-                            className={({ isActive }) => isActive ? 'text-blue-600 font-bold' : 'text-black'}
+                            className={({ isActive }) => isActive ? 'text-indigo-600 font-bold' : 'text-black'}
                             end
                             to={item.path}>
                             {item.label}

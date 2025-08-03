@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useGetProductByIdQuery, useUpdateProductMutation } from '../../../../redux/features/product/productApi';
 import { useSelector } from 'react-redux';
-import TextInput from './TextInput';
-import SelectInput from './SelectInput';
-import UploadImage from './UploadImage';
-import { useCreateProductMutation } from '../../../../redux/features/product/productApi';
-import { useNavigate } from 'react-router-dom';
+import TextInput from '../addProduct/TextInput';
+import SelectInput from '../addProduct/SelectInput';
+import UploadImage from '../addProduct/UploadImage';
 
 const categories = [
     { label: 'Select Category', value: '' },
@@ -26,25 +26,39 @@ const colors = [
     { label: 'White', value: 'white' },
 ];
 
-const AddProduct = () => {
-    const { user } = useSelector((state) => state.auth);
+
+const UpdateProduct = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { user } = useSelector((state) => state.auth)
     const [product, setProduct] = useState({
         name: '',
         category: '',
-        description: '',
-        price: '',
         color: '',
-    });
-    const [image, setImage] = useState('');
-    const [formErrors, setFormErrors] = useState([]);
+        description: '',
+        image: '',
+        price: ''
+    })
+
+    const { data: productData, isLoading: isProductLoading, error: fetcherror, refetch } = useGetProductByIdQuery(id)
+    const [newImage, setNewImage] = useState(null);
+
+    const { name, category, color, description, image: imageUrl, price } = productData?.product || {}
     const [hasSubmitted, setHasSubmitted] = useState(false);
-    const [createProduct, { isLoading }] = useCreateProductMutation();
-    const navigate = useNavigate();
+    const [formErrors, setFormErrors] = useState([]);
+
+
+
+    const [updateProduct, { isLoading, error: updateError }] = useUpdateProductMutation()
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProduct({ ...product, [name]: value });
     };
+
+    const handleImageChange = (image) => {
+        setNewImage(image)
+    }
 
     const validateForm = () => {
         const errors = [];
@@ -60,35 +74,59 @@ const AddProduct = () => {
         return errors.length === 0;
     };
 
-    useEffect(() => {
-        if (hasSubmitted) {
-            validateForm();
-        }
-    }, [product, image]);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setHasSubmitted(true);
 
         if (!validateForm()) return;
 
+        const updatedProduct = {
+            ...product,
+            image: newImage ? newImage : product.image,
+            author: user._id
+        }
+
         try {
-            await createProduct({ ...product, image, author: user?._id }).unwrap();
-            alert('Product added successfully!');
-            setProduct({ name: '', category: '', description: '', price: '', color: '' });
-            setImage('');
+            await updateProduct({ id: id, ...updatedProduct }).unwrap();
+            alert("Product Upadted Successfully")
+            await refetch();
             setFormErrors([]);
             setHasSubmitted(false);
-            navigate('/shop');
-        } catch (err) {
-            console.error('Failed to add product:', err);
-            setFormErrors(["Something went wrong. Please try again."]);
+            navigate('/dashboard/manage-products')
         }
-    };
+        catch (error) {
+            console.log("Failed to update product: ", error)
+        }
+    }
+
+    useEffect(() => {
+        if (productData) {
+            setProduct({
+                name: name || '',
+                category: category || '',
+                color: color || '',
+                description: description || '',
+                image: imageUrl || '',
+                price: price || ''
+
+            })
+        }
+    }, [productData])
+
+    useEffect(() => {
+        if (hasSubmitted) {
+            validateForm();
+        }
+    }, [product, newImage]);
+
+
+    if (isProductLoading) return <div> Loading...</div>
+    if (fetcherror) return <div>Error Fetching Product....</div>
+
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-white  rounded mt-10">
-            <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">Add New Product</h2>
+            <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">Update Product</h2>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1  gap-4">
                     <TextInput
@@ -123,9 +161,10 @@ const AddProduct = () => {
                     />
                 </div>
 
-                <UploadImage  name='image'
-                value={image} 
-                setImage={setImage} />
+                <UploadImage name='image'
+                    value={newImage || product.image}
+                    setImage={handleImageChange}
+                />
 
                 <div>
                     <label htmlFor="description" className="block text-sm font-medium text-gray-700">
@@ -156,18 +195,17 @@ const AddProduct = () => {
                     <button
                         type="submit"
                         disabled={isLoading || (hasSubmitted && formErrors.length > 0)}
-                        className={`px-6 py-3 rounded-md text-white font-semibold transition ${
-                            isLoading || (hasSubmitted && formErrors.length > 0)
+                        className={`px-6 py-3 rounded-md text-white font-semibold transition ${isLoading || (hasSubmitted && formErrors.length > 0)
                             ? 'bg-gray-400 cursor-not-allowed'
                             : 'bg-indigo-600 hover:bg-indigo-700'
                             }`}
                     >
-                        {isLoading ? 'Adding...' : 'Add Product'}
+                        {isLoading ? 'Updating...' : 'Update Product'}
                     </button>
                 </div>
             </form>
         </div>
     );
-};
+}
 
-export default AddProduct;
+export default UpdateProduct

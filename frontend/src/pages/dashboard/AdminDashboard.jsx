@@ -42,7 +42,7 @@ const AdminDashboard = () => {
                     {navItems.map((item) => (<li>
                         <NavLink
                             key={item.path}
-                            className={({ isActive }) => isActive ? 'text-blue-600 font-bold' : 'text-black'}
+                            className={({ isActive }) => isActive ? 'text-indigo-600 font-bold' : 'text-black'}
                             end
                             to={item.path}>
                             {item.label}

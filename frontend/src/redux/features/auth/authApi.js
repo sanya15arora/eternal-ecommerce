@@ -51,6 +51,14 @@ export const authApi = createApi({
             // providesTags: (result, error, id) => [{ type: 'Users', id }],
             // refetchOnMountOrArgChange: true,
         }),
+        getAllUsers: builder.query({
+            query: () => ({
+                url: "/all",
+                method: 'GET',
+            }),
+            refechOnMount: true,
+            invalidatesTags: ['User'],
+        }),
         editprofile: builder.mutation({
             query: ({ id, userData }) => ({
                 url: `/edit/${id}`,
@@ -71,6 +79,6 @@ export const authApi = createApi({
 });
 
 
-export const { useRegisterUserMutation, useLoginUserMutation, useLogoutUserMutation, useGetUserQuery,
+export const { useRegisterUserMutation, useLoginUserMutation, useLogoutUserMutation, useGetUserQuery, useGetAllUsersQuery,
     useDeleteUserMutation, useUpdateUserRoleMutation, useEditprofileMutation } = authApi;
 export default authApi;       

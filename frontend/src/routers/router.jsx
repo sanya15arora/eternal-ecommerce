@@ -16,6 +16,10 @@ import OrderDetails from "../pages/dashboard/user/OrderDetails";
 import UserProfile from "../pages/dashboard/user/UserProfile";
 import AdminDmain from "../pages/dashboard/admin/dashboard/AdminDmain";
 import AddProduct from "../pages/dashboard/admin/addProduct/AddProduct";
+import ManageProduct from "../pages/dashboard/admin/manageProduct/ManageProduct";
+import UpdateProduct from "../pages/dashboard/admin/manageProduct/UpdateProduct";
+import ManageUsers from "../pages/dashboard/admin/Users/ManageUsers";
+import ManageOrders from "../pages/dashboard/admin/manageOrders/ManageOrders";
 
 const router = createBrowserRouter([
     {
@@ -55,10 +59,10 @@ const router = createBrowserRouter([
             // Admin Routes
             { path: 'admin', element: <PrivateRoute role="admin"><AdminDmain /></PrivateRoute> },
             { path: 'add-new-product', element: <PrivateRoute role="admin"><AddProduct /></PrivateRoute> },
-            { path: 'manage-products', element: <PrivateRoute role="admin"><div>Manage Product</div></PrivateRoute> },
-            { path: 'update-product/:id', element: <PrivateRoute role="admin"><div>Update Product</div></PrivateRoute > },
-            { path: 'users', element: <PrivateRoute role="admin"><div>All Users</div> </PrivateRoute > },
-            { path: 'manage-orders', element: <PrivateRoute role="admin"><div>Manage Orders</div></PrivateRoute > },
+            { path: 'manage-products', element: <PrivateRoute role="admin"><ManageProduct /></PrivateRoute> },
+            { path: 'update-product/:id', element: <PrivateRoute role="admin"><UpdateProduct /></PrivateRoute > },
+            { path: 'users', element: <PrivateRoute role="admin"><ManageUsers /> </PrivateRoute > },
+            { path: 'manage-orders', element: <PrivateRoute role="admin"><ManageOrders /></PrivateRoute > },
         ]
     }
 ]);

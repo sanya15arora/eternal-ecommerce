@@ -29,9 +29,11 @@ const Navbar = () => {
 
     const adminDropdownItems = [
         { label: 'Dashboard', path: '/dashboard/admin' },
+        { label: 'Add New Product', path: '/dashboard/add-new-post' },
         { label: 'Manage Products', path: '/dashboard/manage-products' },
-        { label: 'All Orders', path: '/dashboard/manage-orders' },
-        { label: 'Add New Post', path: '/dashboard/add-new-post' },
+        { label: 'Users', path: '/dashboard/users' },
+        { label: 'Manage Orders', path: '/dashboard/manage-orders' },
+
     ];
     const userDropdownItems = [
         { label: 'Dashboard', path: '/dashboard' },
