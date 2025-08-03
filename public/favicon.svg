@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <circle 
+    cx="16" 
+    cy="16" 
+    r="15" 
+    fill="black"
+  />
+  
+  <text 
+    x="8.5" 
+    y="23" 
+    font-family="'Playfair Display', 'Didot', serif" 
+    font-size="20" 
+    font-weight="700"
+    fill="white"
+  >
+    E
+  </text>
+  
+  <circle 
+    cx="24" 
+    cy="10" 
+    r="4" 
+    fill="#ed3849"
+  >
+    <animate 
+      attributeName="r" 
+      values="4;4.5;4" 
+      dur="2s" 
+      repeatCount="indefinite"
+    />
+  </circle>
+</svg>
