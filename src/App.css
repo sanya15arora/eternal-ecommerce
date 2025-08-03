@@ -115,6 +115,8 @@ nav {
   align-items: center;
   justify-content: flex-end;
   gap: 2rem;
+  position: relative;
+  z-index: 50;
 }
 
 .nav__icons span a {
