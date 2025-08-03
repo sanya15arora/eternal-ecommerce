@@ -1,34 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import products from '../../data/products.json'
 import ProductCards from '../shop/ProductCards'
-import { use } from 'react'
+import { useGetProductsByCategoryQuery } from '../../redux/features/product/productApi'
 
 const CategoryPage = () => {
     const { categoryName } = useParams()
-    const [filteredProducts, setFilteredProducts] = useState([])
-
-    useEffect(() => {
-        const filtered = products.filter(product => product.category === categoryName.toLowerCase())
-        setFilteredProducts(filtered)
-    }, [categoryName])
-
+    const { data: filteredProducts = [], isLoading, error } = useGetProductsByCategoryQuery(categoryName)
 
     useEffect(() => {
         window.scrollTo(0, 0)
-    })
+    }, [])
 
     return (
         <>
             <section className='section__container bg-primary-light'>
-                <h2 className='section__header capitalize'> {categoryName}</h2>
-                <p className='section__subheader'> Browse a diverse range of categories, from chic dresses to versatile accessories.
+                <h2 className='section__header capitalize'>{categoryName}</h2>
+                <p className='section__subheader'>
+                    Browse a diverse range of categories, from chic dresses to versatile accessories.
                     Elevate your style today!
                 </p>
             </section>
 
             <div className='section__container'>
-                <ProductCards products={filteredProducts} />
+                {isLoading && <div className="text-center py-10">Loading products...</div>}
+                {error && <div className="text-center py-10 text-red-500">Failed to load products.</div>}
+                {!isLoading && !error && <ProductCards products={filteredProducts} />}
             </div>
         </>
     )

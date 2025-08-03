@@ -59,7 +59,15 @@ const productApi = createApi({
             }),
             invalidatesTags: (result, error, id) => { { type: "Product", id } }
         }),
-    }),
+        searchProducts: builder.query({
+            query: (searchQuery) => `/search?q=${encodeURIComponent(searchQuery)}`,
+            providesTags: ["Product"],
+        }),
+        getProductsByCategory: builder.query({
+            query: (categoryName) => `/category/${categoryName}`,
+            providesTags: ["Product"],
+        }),
+    })
 
 });
 
@@ -71,6 +79,8 @@ export const {
     useGetTrendingProductsQuery,
     useUpdateProductMutation,
     useDeleteProductMutation,
+    useSearchProductsQuery,
+    useGetProductsByCategoryQuery
 } = productApi;
 
 export default productApi;
