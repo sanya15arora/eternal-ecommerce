@@ -121,7 +121,7 @@ router.patch('/update/:id', verifyToken, verifyAdmin, async (req, res) => {
 });
 
 // Delete a product by ID
-router.delete('/:id', verifyToken, verifyAdmin, async (req, res) => {
+router.delete('/delete/:id', verifyToken, verifyAdmin, async (req, res) => {
     try {
         const productId = req.params.id;
         const deletedProduct = await Products.findByIdAndDelete(productId);

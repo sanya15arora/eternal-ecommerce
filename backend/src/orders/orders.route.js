@@ -163,7 +163,7 @@ router.get('/all', verifyToken, verifyAdmin, async (req, res) => {
         if (!orders || orders.length === 0) {
             return res.status(404).json({ orders: 0, message: 'No orders found' });
         }
-        res.status(200).send({ orders });
+        res.status(200).send(orders);
     } catch (error) {
         console.error('Error fetching all orders:', error.message);
         res.status(500).json({ message: 'Error fetching all orders' });
