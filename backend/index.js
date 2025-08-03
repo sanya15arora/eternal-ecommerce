@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
+
 const app = express();
 
 require('dotenv').config();
@@ -23,6 +24,7 @@ app.use(cors({
 }));
 
 
+const uploadImage = require('./src/utils/uploadImage')
 // all routes
 const authRoutes = require('./src/users/user.route');
 const productRoutes = require('./src/products/products.route');
@@ -49,6 +51,12 @@ async function main() {
 
 app.get('/', (req, res) => {
     res.send('Eternal E-commerce Server is running!')
+})
+
+app.post('/uploadImage', (req, res) => {
+    uploadImage(req.body.image)
+        .then((url) => res.send(url))
+        .catch((error) => res.status(500).send(error))
 })
 
 app.listen(port, () => {

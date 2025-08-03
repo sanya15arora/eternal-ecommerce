@@ -63,7 +63,7 @@ router.get('/admin-stats', async (req, res) => {
                 }
             }
         ]);
-        const totalEarnings = totalEarningsResult.length > 0 ? totalEarningsResult[0].totalEarnings : 0;
+        const totalEarnings = totalEarningsResult.length > 0 ? totalEarningsResult[0].totalEarnings.toFixed(2) : 0;
 
         const monthlyEarningsResult = await Orders.aggregate([
             {
