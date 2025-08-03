@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import getBaseURL from '../../../../utils/baseURL';
+import { uploadImageFile } from '../../../../utils/uploadImageLogic';
 
 const UploadImage = ({ name, value, setImage }) => {
     const [loading, setLoading] = useState(false);
@@ -13,28 +12,17 @@ const UploadImage = ({ name, value, setImage }) => {
         }
     }, [value, setImage]);
 
-    const convertBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = reject;
-        });
-    };
-
-    const uploadImage = async (event) => {
-        const file = event.target.files?.[0];
+    const handleFileUpload = async (e) => {
+        const file = e.target.files?.[0];
         if (!file) return;
 
         try {
             setLoading(true);
-            const base64 = await convertBase64(file);
-            const { data } = await axios.post(`${getBaseURL()}/uploadImage`, { image: base64 });
-            setUrl(data);
-            setImage(data);
-        } catch (error) {
-            console.error("Error uploading image:", error);
-            alert("Failed to upload image.");
+            const imageUrl = await uploadImageFile(file);
+            setUrl(imageUrl);
+            setImage(imageUrl);
+        } catch (err) {
+            alert(err.message);
         } finally {
             setLoading(false);
         }
@@ -42,19 +30,20 @@ const UploadImage = ({ name, value, setImage }) => {
 
     return (
         <div className="mb-4">
-            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">Upload Image</label>
+            <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
+                Upload Image
+            </label>
+
             <input
                 type="file"
                 name={name}
                 id={name}
                 accept="image/*"
-                onChange={uploadImage}
+                onChange={handleFileUpload}
                 className="add-product-InputCSS"
             />
 
-            {loading && (
-                <p className="mt-2 text-sm text-blue-500">Uploading image...</p>
-            )}
+            {loading && <p className="mt-2 text-sm text-blue-500">Uploading image...</p>}
 
             {(url && !loading) && (
                 <div className="mt-3">
@@ -67,7 +56,9 @@ const UploadImage = ({ name, value, setImage }) => {
                 </div>
             )}
         </div>
+
     );
 };
 
 export default UploadImage;
+

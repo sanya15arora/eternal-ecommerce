@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEditprofileMutation } from '../../../redux/features/auth/authApi';
 import { setUser } from '../../../redux/features/auth/authSlice';
+import { uploadImageFile } from '../../../utils/uploadImageLogic';
 
 const UserProfile = () => {
     const { user } = useSelector((state) => state.auth);
@@ -18,9 +19,25 @@ const UserProfile = () => {
         address: '',
     });
 
+    const [imageUploading, setImageUploading] = useState(false);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+            setImageUploading(true);
+            const url = await uploadImageFile(file);
+            setFormData((prev) => ({ ...prev, profileImage: url }));
+        } catch (err) {
+            alert("Image upload failed.");
+        } finally {
+            setImageUploading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -72,14 +89,17 @@ const UserProfile = () => {
                         alt="Profile"
                         className="w-20 h-20 rounded-full object-cover border"
                     />
-                    <input
-                        type="text"
-                        name="profileImage"
-                        value={formData.profileImage}
-                        onChange={handleChange}
-                        placeholder="Profile Image URL"
-                        className="flex-1 px-3 py-2 border rounded-md w-full"
-                    />
+                    <div className="flex flex-col gap-1">
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="w-full text-sm"
+                        />
+                        {imageUploading && (
+                            <p className="text-sm text-blue-500">Uploading image...</p>
+                        )}
+                    </div>
                 </div>
 
                 {/* Username */}
@@ -87,7 +107,7 @@ const UserProfile = () => {
                     <label className="block mb-1 font-medium">Username</label>
                     <input
                         type="text"
-                        name="userName"
+                        name="username"
                         value={formData.username}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border rounded-md"
@@ -106,6 +126,7 @@ const UserProfile = () => {
                         readOnly
                     />
                 </div>
+
                 {/* Phone */}
                 <div>
                     <label className="block mb-1 font-medium">Phone</label>
@@ -129,6 +150,7 @@ const UserProfile = () => {
                         className="w-full px-3 py-2 border rounded-md"
                     />
                 </div>
+
                 {/* Bio */}
                 <div>
                     <label className="block mb-1 font-medium">Bio</label>
@@ -140,8 +162,6 @@ const UserProfile = () => {
                         rows="3"
                     />
                 </div>
-
-
 
                 {/* Address */}
                 <div>
@@ -155,8 +175,6 @@ const UserProfile = () => {
                     />
                 </div>
 
-
-
                 {/* Submit */}
                 <div className="pt-4">
                     <button
@@ -169,8 +187,14 @@ const UserProfile = () => {
                 </div>
 
                 {/* Feedback */}
-                {isError && <p className="text-red-500 text-sm mt-2">{error?.data?.message || 'Failed to update profile'}</p>}
-                {isSuccess && <p className="text-green-600 text-sm mt-2">Profile updated successfully!</p>}
+                {isError && (
+                    <p className="text-red-500 text-sm mt-2">
+                        {error?.data?.message || 'Failed to update profile'}
+                    </p>
+                )}
+                {isSuccess && (
+                    <p className="text-green-600 text-sm mt-2">Profile updated successfully!</p>
+                )}
             </form>
         </div>
     );
