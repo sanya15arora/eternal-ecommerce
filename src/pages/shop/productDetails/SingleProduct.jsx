@@ -1,5 +1,4 @@
-import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import {Link, useNavigate, useParams} from 'react-router-dom'
 import RatingStars from '../../../components/RatingStars'
 import { useDispatch } from "react-redux"
 import { useGetProductByIdQuery } from '../../../redux/features/product/productApi'
@@ -9,14 +8,21 @@ import ReviewCard from '../reviews/ReviewCard'
 const SingleProduct = () => {
     const { id } = useParams()
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user")) || null;
 
     const { data, error, isLoading } = useGetProductByIdQuery(id)
     const singleProduct = data?.product || {};
     const productReviews = data?.reviews || [];
 
     const handleAddToCart = (product) => {
-        dispatch(addToCart(product))
-        alert("Added to cart!");
+        if (!user) {
+            navigate("/login", { state: { from: location.pathname } });
+        }
+        else {
+            dispatch(addToCart(product))
+            alert("Added to cart!");
+        }
     }
 
     if (isLoading) return <p>Loading....</p>

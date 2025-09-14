@@ -1,15 +1,20 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import RatingStars from '../../components/RatingStars'
 import { useDispatch } from 'react-redux'
 import { addToCart } from '../../redux/features/cart/cartSlice'
 
 const ProductCards = ({ products }) => {
     const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user")) || null;
     const handleAddToCart = (product) => {
-        dispatch(addToCart(product))
-        alert("Added to cart!");
-
+        if (!user) {
+            navigate("/login", { state: { from: location.pathname } });
+        }
+        else {
+            dispatch(addToCart(product))
+            alert("Added to cart!");
+        }
     }
 
     return (

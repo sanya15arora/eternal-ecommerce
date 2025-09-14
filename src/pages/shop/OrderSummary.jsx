@@ -16,6 +16,7 @@ const OrderSummary = () => {
     }
 
     const makePayment = async () => {
+        sessionStorage.setItem("returnTo", window.location.pathname);
         const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
         if (!stripe) {
             console.error("Stripe not loaded");
