@@ -25,18 +25,17 @@ const Footer = () => {
                 <div className='footer__col'>
                     <h4> COMPANY</h4>
                     <a href='/'>Home </a>
-                    <a href='/'>About Us </a>
-                    <a href='/'> Work with Us </a>
-                    <a href='/'> Our Blogs</a>
-                    <a href='/'> Terms & Conditions</a>
+                    <a href='/shop'>Shop </a>
+                    <a href='/search'>Search</a>
+                    <a href='/contact'>Contact Us </a>
                 </div>
                 <div className='footer__col'>
                     <h4> USEFUL LINKS</h4>
-                    <a href='/'>Help </a>
-                    <a href='/'>Track My Order </a>
-                    <a href='/'> Men </a>
-                    <a href='/'> Women</a>
-                    <a href='/'> Dresses</a>
+
+                    <a href={'/categories/accessories'}>Accessories</a>
+                    <a href={'/categories/dress'}>Dress</a>
+                    <a href={'/categories/jewellery'}>Jewellery</a>
+                    <a href={'/categories/cosmetics'}>Cosmetics</a>
                 </div>
                 <div className='footer__col'>
                     <h4> Instagram</h4>

@@ -9,7 +9,6 @@ import ReviewCard from '../reviews/ReviewCard'
 const SingleProduct = () => {
     const { id } = useParams()
     const dispatch = useDispatch();
-    console.log(id)
 
     const { data, error, isLoading } = useGetProductByIdQuery(id)
     const singleProduct = data?.product || {};
@@ -17,6 +16,7 @@ const SingleProduct = () => {
 
     const handleAddToCart = (product) => {
         dispatch(addToCart(product))
+        alert("Added to cart!");
     }
 
     if (isLoading) return <p>Loading....</p>
@@ -67,7 +67,7 @@ const SingleProduct = () => {
             </section>
 
             <section className='section__container mt-8'>
-                <ReviewCard productReviews={productReviews} />
+                <ReviewCard productReviews={productReviews} productId={id}/>
             </section>
 
         </>

@@ -3,17 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import RatingStars from '../../../components/RatingStars';
 import commentorIcon from '../../../assets/avatar.png';
 import PostAReview from './PostAReview';
+import {useHasPurchasedQuery} from "../../../redux/features/order/orderApi.jsx";
 
-const ReviewCard = ({ productReviews = [] }) => {
+const ReviewCard = ({ productReviews = [] , productId}) => {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user")) || null;
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { data, isLoading } = useHasPurchasedQuery(
+        { userId: user?._id, productId },
+        { skip: !user }
+    );
+
     const handleOpenReviewModal = () => {
         if (!user) {
             navigate("/login", { state: { from: location.pathname } });
+        } else if (data?.hasPurchased) {
+        setIsModalOpen(true);
         } else {
-
-            setIsModalOpen(true);
+            setIsModalOpen(false);
+            alert("Please purchase this product first to share your review.");
         }
     }
     const handleCloseReviewModal = () => {
@@ -54,12 +62,13 @@ const ReviewCard = ({ productReviews = [] }) => {
             ) : (
                 <p className="text-gray-500">No reviews available for this product.</p>
             )}
-            <div className='mt-12'>
+            {!isLoading && <div className='mt-12'>
                 <button className='px-6 py-3 bg-primary text-white rounded-md'
                     onClick={handleOpenReviewModal}>
                     Add A Review
                 </button>
             </div>
+            }
             {
                 isModalOpen && (
                     <PostAReview isOpen={isModalOpen} handleClose={handleCloseReviewModal} />

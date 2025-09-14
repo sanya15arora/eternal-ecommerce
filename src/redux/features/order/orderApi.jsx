@@ -46,8 +46,16 @@ const orderApi = createApi({
             }),
             invalidatesTags: ['Order']
         }),
+        hasPurchased: builder.query({
+            query: ({ userId, productId }) => ({
+                url: `/has-purchased/${userId}/${productId}`,
+                method: 'GET',
+            }),
+        }),
     })
+
+
 })
 
-export const { useGetOrdersByEmailQuery, useGetOrdersByIdQuery, useGetAllOrdersQuery, useUpdateOrderStatusMutation, useDeleteOrderMutation } = orderApi;
+export const { useGetOrdersByEmailQuery, useGetOrdersByIdQuery, useGetAllOrdersQuery, useUpdateOrderStatusMutation, useDeleteOrderMutation, useHasPurchasedQuery } = orderApi;
 export default orderApi;

@@ -3,9 +3,9 @@ import React from 'react'
 const TimelineStep = ({ step, order, isCompleted, isCurrent, isLastStep, icon, description }) => {
     const iconBgColor = isCompleted || isCurrent ? `bg-${icon.bgColor}` : 'bg-gray-100';
     const iconTextColor = isCompleted || isCurrent ? 'text-white' : `text-${icon.textColor}`;
-    const connectorColor = isCompleted ? 'bg-blue-300' : 'bg-gray-200';
-    const labelTextColor = isCompleted || isCurrent ? 'text-gray-900' : 'text-gray-500';
-    const descriptionTextColor = isCompleted || isCurrent ? 'text-gray-900' : 'text-gray-500';
+    const connectorColor = isCompleted ? 'bg-blue-400' : 'bg-gray-200';
+    const labelTextColor = isCompleted || isCurrent ? 'text-gray-900' : 'text-gray-300';
+    const descriptionTextColor = isCompleted || isCurrent ? 'text-gray-900' : 'text-gray-200';
 
 
     return (
@@ -25,7 +25,7 @@ const TimelineStep = ({ step, order, isCompleted, isCurrent, isLastStep, icon, d
             </div >
             <div className='mt-3 sm:pe-8'>
                 <h3 className={`text-base font-medium ${labelTextColor}`}>{step.label}</h3>
-                <time className='block mb-2 text-sm font-normal leading-none text-gray-400'>{order.updatedAt ? new Date(order.updatedAt).toLocaleString() : "Time"}</time>
+                {isCurrent && ( <time className='block mb-2 text-sm font-normal leading-none text-gray-500'>{order.updatedAt ? new Date(order.updatedAt).toLocaleString() : "Time"}</time>)}
                 <p className={`text-base font-normal ${descriptionTextColor}`}>{description}</p>
             </div>
         </li >
